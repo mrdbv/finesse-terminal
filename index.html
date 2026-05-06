@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="FINE$$E - Solana Trading Terminal. Professional cryptocurrency trading platform with real-time charts, memcoin tracking, and smart contract editor.">
+    <title>FINE$$E | Terminal v2.6</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@1,800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- LOADING SCREEN -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="matrix-bg" id="matrixBg"></div>
+        <div class="loading-content">
+            <div class="loading-logo">FINE<span>$$</span>E</div>
+            <div class="scanner-ring"></div>
+            <div class="loading-text">INITIALIZING SYSTEM...</div>
+            <div class="loading-bar">
+                <div class="loading-bar-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUTH SCREEN (Вхід/Реєстрація) -->
+    <div class="auth-screen" id="authScreen">
+        <div class="auth-overlay"></div>
+        <div class="auth-content">
+            <h2 class="auth-title">FINE<span>$$</span>E</h2>
+            <form class="auth-form" onsubmit="handleAuth(event)">
+                <input type="text" class="auth-input" id="authUsername" placeholder="USER_IDENTIFIER" required>
+                <input type="password" class="auth-input" id="authPassword" placeholder="ACCESS_KEY" required>
+                <button type="submit" class="auth-button" id="authButton">AUTHENTICATE</button>
+                <div class="loading-bar" style="display: none;" id="authLoadingBar">
+                    <div class="loading-bar-fill"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="cursor" class="cursor-dot"></div>
+
+    <!-- MAIN PAGE -->
+    <div class="ticker">
+        <div class="ticker-content">
+            $SOL: 142.68 (+4.2%) // $BTC: 64,120 (-0.8%) // $ETH: 3,450 (+1.2%) // NETWORK_LOAD: 14% // STATUS: SECURE_CONNECTION_ESTABLISHED //
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">FINE<span>$$</span>E</div>
+            <div class="nav-group">
+                <button class="nav-btn" onclick="toggleCursorMode()" id="modeBtn">Mode: Custom</button>
+                <button class="nav-btn" onclick="nextCursor()" id="styleBtn">Style: Dot</button>
+                <button class="nav-btn" onclick="showAuthScreen('Вхід')">Вхід</button>
+                <button class="nav-btn" onclick="showAuthScreen('Реєстрація')">Реєстрація</button>
+                <a href="#" class="nav-btn" style="border-color: var(--accent-color); color: var(--accent-color); text-decoration: none;">Connect</a>
+            </div>
+        </header>
+
+        <section class="hero">
+            <h1>PRECISION<br>IN MOTION</h1>
+            
+            <div class="terminal">
+                <div style="color: var(--accent-color); font-size: 11px; margin-bottom: 30px; opacity: 0.8;">// LIVE_SYSTEM_STATS: ACTIVE</div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div style="font-size: 12px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 10px;">SOL Price</div>
+                        <div class="stat-value">$142.68 <span style="font-size: 14px; color: #00ff88;">+4.2%</span></div>
+                    </div>
+                    <div class="stat-item">
+                        <div style="font-size: 12px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 10px;">Network TPS</div>
+                        <div class="stat-value">2,841</div>
+                    </div>
+                    <div class="stat-item">
+                        <div style="font-size: 12px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 10px;">Market Cap</div>
+                        <div class="stat-value">$63.9B</div>
+                    </div>
+                    <div class="stat-item">
+                        <div style="font-size: 12px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 10px;">Gas (Avg)</div>
+                        <div class="stat-value">0.0005 <span style="font-size: 14px; color: var(--text-dim);">SOL</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <iframe src="https://s.tradingview.com/widgetembed/?symbol=BINANCE%3ASOLUSDT&interval=D&theme=dark&style=1" width="100%" height="100%" frameborder="0"></iframe>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card"><h3>01 // SECURITY</h3><p>Ledger Hardware Integration.</p></div>
+                <div class="feature-card"><h3>02 // SPEED</h3><p>Custom RPC Nodes execution.</p></div>
+                <div class="feature-card"><h3>03 // AI</h3><p>Algorithm anomaly detection.</p></div>
+            </div>
+        </section>
+
+        <footer>&copy; 2026 FINE$$E TECHNOLOGY GROUP</footer>
+    </div>
+
+    <!-- TERMINAL PAGE -->
+    <div class="terminal-page" id="terminalPage">
+        <div class="terminal-header">
+            <div class="terminal-title">FINE<span>$$</span>E // TERMINAL</div>
+            <button class="logout-btn" onclick="handleLogout()">LOGOUT</button>
+        </div>
+
+        <div class="terminal-content">
+            <!-- SIDEBAR -->
+            <div class="terminal-sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">📊 Memcoins</div>
+                    <div class="coin-item active" onclick="selectCoin(this, 'SHIB')">
+                        <div class="coin-name">SHIBA INU</div>
+                        <div class="coin-price">$0.0000285</div>
+                        <div class="coin-change positive">+12.5%</div>
+                    </div>
+                    <div class="coin-item" onclick="selectCoin(this, 'DOGE')">
+                        <div class="coin-name">DOGECOIN</div>
+                        <div class="coin-price">$0.3842</div>
+                        <div class="coin-change positive">+8.3%</div>
+                    </div>
+                    <div class="coin-item" onclick="selectCoin(this, 'PEPE')">
+                        <div class="coin-name">PEPE</div>
+                        <div class="coin-price">$0.0000012</div>
+                        <div class="coin-change negative">-5.2%</div>
+                    </div>
+                    <div class="coin-item" onclick="selectCoin(this, 'BONK')">
+                        <div class="coin-name">BONK</div>
+                        <div class="coin-price">$0.00001234</div>
+                        <div class="coin-change positive">+15.7%</div>
+                    </div>
+                    <div class="coin-item" onclick="selectCoin(this, 'FLOKI')">
+                        <div class="coin-name">FLOKI</div>
+                        <div class="coin-price">$0.00002156</div>
+                        <div class="coin-change negative">-2.1%</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-title">⚙️ System Info</div>
+                    <div style="font-size: 10px; color: var(--text-dim); line-height: 2; background: var(--glass-bg); padding: 12px; border-radius: 8px;">
+                        <div><span style="color: var(--accent-color);">> Status:</span> ONLINE</div>
+                        <div><span style="color: var(--accent-color);">> Network:</span> SOLANA</div>
+                        <div><span style="color: var(--accent-color);">> TPS:</span> 2,841</div>
+                        <div><span style="color: var(--accent-color);">> Latency:</span> 142ms</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAIN CONTENT -->
+            <div class="terminal-main">
+                <div class="editor-section">
+                    <div class="editor-header">// SOLANA CONTRACT EDITOR</div>
+                    <div class="code-editor">
+                        <div class="code-line"><span style="color: var(--accent-color);">use</span> solana_program::{{</div>
+                        <div class="code-line">&nbsp;&nbsp;account_info::{next_account_info, AccountInfo},</div>
+                        <div class="code-line">&nbsp;&nbsp;entrypoint,</div>
+                        <div class="code-line">&nbsp;&nbsp;msg,</div>
+                        <div class="code-line">&nbsp;&nbsp;pubkey::Pubkey,</div>
+                        <div class="code-line">}};</div>
+                        <div class="code-line"></div>
+                        <div class="code-line"><span style="color: var(--accent-color);">entrypoint!</span>(process_instruction);</div>
+                        <div class="code-line"></div>
+                        <div class="code-line"><span style="color: var(--accent-color);">fn</span> process_instruction(</div>
+                        <div class="code-line">&nbsp;&nbsp;program_id: &Pubkey,</div>
+                        <div class="code-line">&nbsp;&nbsp;accounts: &[AccountInfo],</div>
+                        <div class="code-line">&nbsp;&nbsp;instruction_data: &[u8],</div>
+                        <div class="code-line">) -&gt; ProgramResult {</div>
+                        <div class="code-line">&nbsp;&nbsp;msg!(<span style="color: #00ff88;">&quot;Memecoin processor initialized!&quot;</span>);</div>
+                        <div class="code-line">&nbsp;&nbsp;<span style="color: var(--accent-color);">Ok</span>(())</div>
+                        <div class="code-line">}</div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-header">📈 SHIBA INU (SHIB/USDT) - LIVE CHART</div>
+                    <iframe class="chart-iframe" src="https://s.tradingview.com/widgetembed/?symbol=BINANCE%3ASHIBUSDT&interval=1&theme=dark&style=1" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
