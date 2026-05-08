@@ -11,9 +11,9 @@
  * - Solana smart contract editor
  */
 
-// ============================================
+
 // DOM ELEMENTS
-// ============================================
+
 const cursor = document.getElementById('cursor');
 const modeBtn = document.getElementById('modeBtn');
 const styleBtn = document.getElementById('styleBtn');
