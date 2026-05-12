@@ -6,9 +6,10 @@
  * - Custom cursor system (dot, scanner, ghost)
  * - Loading screen with matrix rain effect
  * - Authentication flow with animations
- * - Terminal dashboard with memcoin tracking
+ * - Terminal dashboard with memecoin tracking
  * - Real-time chart integration (TradingView)
  * - Solana smart contract editor
+ * - Real-time pump detection system
  */
 
 
@@ -36,6 +37,15 @@ const cursorTypes = [
     { class: 'cursor-scanner', name: 'Scanner' },
     { class: 'cursor-ghost', name: 'Ghost' }
 ];
+
+// Coin data mapping
+const coinDataMap = {
+    'SHIB': { name: 'SHIBA INU', symbol: 'SHIBUSDT', pair: 'SHIB' },
+    'DOGE': { name: 'DOGECOIN', symbol: 'DOGEUSDT', pair: 'DOGE' },
+    'PEPE': { name: 'PEPE', symbol: 'PEPEUSDT', pair: 'PEPE' },
+    'BONK': { name: 'BONK', symbol: 'BONKUSDT', pair: 'BONK' },
+    'FLOKI': { name: 'FLOKI', symbol: 'FLOKIUSDT', pair: 'FLOKI' }
+};
 
 // ============================================
 // INITIALIZATION
@@ -75,7 +85,7 @@ function generateMatrixChars() {
 }
 
 // Initialize matrix effect on page load
-generatMatrixChars();
+generateMatrixChars();
 
 // ============================================
 // AUTHENTICATION FLOW
@@ -117,6 +127,9 @@ function handleAuth(event) {
         mainContainer.style.display = 'none';
         ticker.style.display = 'none';
         terminalPage.classList.add('show');
+        
+        // Start pump detection when authenticated
+        startPumpDetection();
     }, 2000);
 }
 
@@ -131,6 +144,9 @@ function handleLogout() {
     ticker.style.display = 'block';
     document.getElementById('authUsername').value = '';
     document.getElementById('authPassword').value = '';
+    
+    // Stop pump detection
+    stopPumpDetection();
 }
 
 // ============================================
@@ -141,26 +157,129 @@ function handleLogout() {
  * Select a cryptocurrency and update chart
  * @param {HTMLElement} element - The clicked coin item
  * @param {string} symbol - Cryptocurrency symbol (SHIB, DOGE, etc.)
+ * @param {string} coinName - Full coin name (SHIBA INU, DOGECOIN, etc.)
  */
-function selectCoin(element, symbol) {
+function selectCoin(element, symbol, coinName) {
     // Remove active class from all coins
     document.querySelectorAll('.coin-item').forEach(el => el.classList.remove('active'));
     
     // Add active class to selected coin
     element.classList.add('active');
     
-    // Map symbols to TradingView symbols
-    const coinSymbols = {
-        'SHIB': 'SHIBUSDT',
-        'DOGE': 'DOGEUSDT',
-        'PEPE': 'PEPEUSDT',
-        'BONK': 'BONKUSDT',
-        'FLOKI': 'FLOKIUSDT'
-    };
+    // Get coin data
+    const coinData = coinDataMap[symbol];
+    if (!coinData) return;
+    
+    // Update chart header with dynamic coin name
+    const chartHeader = document.getElementById('chartHeader');
+    chartHeader.textContent = `📈 ${coinName} (${coinData.pair}/USDT) - LIVE CHART`;
     
     // Update chart iframe with new coin data
     const chartIframe = document.querySelector('.chart-iframe');
-    chartIframe.src = `https://s.tradingview.com/widgetembed/?symbol=BINANCE%3A${coinSymbols[symbol]}&interval=1&theme=dark&style=1`;
+    chartIframe.src = `https://s.tradingview.com/widgetembed/?symbol=BINANCE%3A${coinData.symbol}&interval=1&theme=dark&style=1`;
+}
+
+// ============================================
+// PUMP DETECTION SYSTEM
+// ============================================
+
+let pumpDetectionInterval = null;
+
+/**
+ * Simulate pump detection and add new coins
+ * In production, this would connect to a real API/WebSocket
+ */
+function startPumpDetection() {
+    if (!isAuthenticated) return;
+    
+    const newPumps = [
+        { symbol: 'WIF', name: 'DOGWIFHAT', price: '$2.45', change: '+125%' },
+        { symbol: 'ORCA', name: 'ORCA', price: '$0.542', change: '+45%' },
+        { symbol: 'COPE', name: 'COPE', price: '$0.0234', change: '+89%' },
+        { symbol: 'SAMO', name: 'SAMOYEDCOIN', price: '$0.0145', change: '+67%' },
+        { symbol: 'JUP', name: 'JUPITER', price: '$0.847', change: '+34%' }
+    ];
+    
+    pumpDetectionInterval = setInterval(() => {
+        if (!isAuthenticated) return;
+        
+        const randomPump = newPumps[Math.floor(Math.random() * newPumps.length)];
+        addNewPumpCoin(randomPump.symbol, randomPump.name, randomPump.price, randomPump.change);
+    }, 12000); // Every 12 seconds
+}
+
+/**
+ * Stop pump detection when logging out
+ */
+function stopPumpDetection() {
+    if (pumpDetectionInterval) {
+        clearInterval(pumpDetectionInterval);
+        pumpDetectionInterval = null;
+    }
+}
+
+/**
+ * Add new coin from pump detection
+ * @param {string} symbol - Coin symbol
+ * @param {string} name - Full coin name
+ * @param {string} price - Current price
+ * @param {string} change - Price change percentage
+ */
+function addNewPumpCoin(symbol, name, price, change) {
+    const newCoinsSection = document.getElementById('newCoinsSection');
+    const newCoinsList = document.getElementById('newCoinsList');
+    
+    // Show new pumps section
+    newCoinsSection.style.display = 'block';
+    
+    // Create new coin element
+    const coinElement = document.createElement('div');
+    coinElement.className = 'coin-item new-pump';
+    coinElement.innerHTML = `
+        <div class="coin-name">${name}</div>
+        <div class="coin-price">${price}</div>
+        <div class="coin-change positive">${change}</div>
+    `;
+    
+    // Add click handler
+    coinElement.onclick = () => {
+        selectCoin(coinElement, symbol, name);
+        coinElement.classList.add('active');
+    };
+    
+    // Add to list
+    newCoinsList.insertBefore(coinElement, newCoinsList.firstChild);
+    
+    // Show notification
+    showPumpNotification(symbol, name, change);
+    
+    // Remove old coins if list gets too long
+    const coins = newCoinsList.querySelectorAll('.coin-item');
+    if (coins.length > 5) {
+        coins[coins.length - 1].remove();
+    }
+}
+
+/**
+ * Show pump notification popup
+ * @param {string} symbol - Coin symbol
+ * @param {string} name - Coin name
+ * @param {string} change - Price change
+ */
+function showPumpNotification(symbol, name, change) {
+    const notification = document.getElementById('pumpNotification');
+    const title = document.getElementById('pumpTitle');
+    const details = document.getElementById('pumpDetails');
+    
+    title.textContent = `🚀 ${symbol} PUMP DETECTED`;
+    details.textContent = `${name} is up ${change}! Added to your watchlist.`;
+    
+    notification.classList.add('show');
+    
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 5000);
 }
 
 // ============================================
