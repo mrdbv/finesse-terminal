@@ -100,6 +100,59 @@ body {
     100% { transform: translateX(-100%); }
 }
 
+@keyframes slideInNotification {
+    from { transform: translateX(400px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOutNotification {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(400px); opacity: 0; }
+}
+
+/* ============================================
+   PUMP NOTIFICATION
+   ============================================ */
+.pump-notification {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(135deg, rgba(0, 255, 0, 0.1) 0%, rgba(0, 209, 255, 0.05) 100%);
+    border: 1px solid rgba(0, 255, 136, 0.5);
+    border-radius: 12px;
+    padding: 20px;
+    min-width: 300px;
+    z-index: 10000;
+    display: none;
+    animation: slideInNotification 0.4s ease-out;
+}
+
+.pump-notification.show {
+    display: block;
+}
+
+.pump-notification.hide {
+    animation: slideOutNotification 0.4s ease-in forwards;
+}
+
+.pump-content {
+    text-align: left;
+}
+
+.pump-title {
+    color: #00ff88;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.pump-details {
+    color: var(--accent-color);
+    font-size: 12px;
+    line-height: 1.4;
+}
+
 /* ============================================
    LOADING SCREEN
    ============================================ */
@@ -631,6 +684,16 @@ footer {
 .coin-item.active {
     border-color: var(--accent-color);
     background: rgba(0, 209, 255, 0.2);
+}
+
+.coin-item.new-pump {
+    border: 1px solid rgba(0, 255, 136, 0.5);
+    background: rgba(0, 255, 136, 0.1);
+}
+
+.coin-item.new-pump:hover {
+    border-color: #00ff88;
+    background: rgba(0, 255, 136, 0.2);
 }
 
 .coin-name {
