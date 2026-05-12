@@ -1,261 +1,231 @@
-# 🛠️ Посібник з налаштування Finesse Terminal v2.6
+# 🛠️ Як встановити Finesse Terminal - Простий посібник
 
-## 📋 Зміст
+Привіт! Давайте разом встановимо цей проект. Я допоможу вам крок за кроком.
 
-- [Швидкий старт](#швидкий-старт)
-- [Системні вимоги](#системні-вимоги)
-- [Крок за кроком встановлення](#крок-за-кроком-встановлення)
-- [Налаштування проекту](#налаштування-проекту)
-- [Запуск для розробки](#запуск-для-розробки)
-- [Виробничі налаштування](#виробничі-налаштування)
-- [Перевірка](#перевірка)
+## 📋 Навігація
+
+- [Дуже швидко (за 2 хвилини)](#⚡-гарячий-старт)
+- [Що потрібно на комп'ютері](#⚙️-системні-вимоги)
+- [Встановлення для новачків](#методи-встановлення)
+- [Як налаштувати все під себе](#⚙️-налаштування)
+- [Як розробляти](#🔨-розробка)
+- [Як запустити в мережу](#🌐-запуск)
 
 ---
 
-## ⚡ Швидкий старт
+## ⚡ Гарячий старт
 
-Хочете почати за 2 хвилини? Дотримуйтеся цих кроків:
+Поспішаєте? Дотримуйтеся цих кроків:
 
-### Windows
+### Для Windows
 ```powershell
-# 1. Завантажте ZIP архів
-# https://github.com/mrdbv/finesse-terminal/archive/refs/heads/main.zip
-
-# 2. Розпакуйте на вашу комп'ютер
-
-# 3. Відкрийте PowerShell в папці проекту
-
-# 4. Запустіть сервер
+# 1. Скачайте ZIP з GitHub
+# 2. Розпакуйте його
+# 3. Запустіть PowerShell у папці проекту
 python -m http.server 8000
-
-# 5. Перейдіть на http://localhost:8000
+# 4. Перейдіть на http://localhost:8000
 ```
 
-### macOS / Linux
+### Для Mac або Linux
 ```bash
-# 1. Клонуємо репозиторій
+# Клонуємо
 git clone https://github.com/mrdbv/finesse-terminal.git
 cd finesse-terminal
 
-# 2. Запускаємо локальний сервер
+# Запускаємо сервер
 python -m http.server 8000
 
-# 3. Відкриваємо в браузері
-open http://localhost:8000  # macOS
+# Відкриваємо
+open http://localhost:8000  # Mac
 xdg-open http://localhost:8000  # Linux
 ```
+
+**Це все! Застосунок готовий.** ✅
 
 ---
 
 ## ⚙️ Системні вимоги
 
-### Мінімальні вимоги
-| Компонент | Вимога |
-|-----------|--------|
-| **OS** | Windows 10 / macOS 10.15 / Linux |
-| **RAM** | 2 ГБ мінімум |
-| **Місце на диску** | 100 МБ |
-| **Браузер** | Chrome 90+ / Firefox 88+ / Safari 14+ / Edge 90+ |
-| **Інтернет** | Вимагається для TradingView графіків |
+### Мінімум для роботи
+| Що | Вимога |
+|---|---|
+| **ОС** | Windows 10 / Mac 10.15 / Linux (будь-яка) |
+| **Пам'ять** | 2 ГБ (більше краще) |
+| **Місце** | 100 МБ для проекту |
+| **Браузер** | Chrome / Firefox / Safari / Edge (новіші версії) |
+| **Інтернет** | Так, для графіків TradingView |
 
-### Рекомендовані вимоги
-| Компонент | Рекомендація |
-|-----------|-------------|
-| **OS** | Windows 11 / macOS 12 / Ubuntu 20.04+ |
-| **RAM** | 4+ ГБ |
-| **CPU** | Intel i5 / Apple M1 / AMD Ryzen 5+ |
-| **Браузер** | Google Chrome Latest |
-| **Інтернет** | Швидкість 10+ Мбіт/с |
+### Рекомендуємо
+| Що | Краще буде |
+|---|---|
+| **ОС** | Windows 11 / Mac 12+ / Ubuntu 20.04+ |
+| **Пам'ять** | 4+ ГБ |
+| **Процесор** | Intel i5 / Apple M1 / AMD Ryzen 5+ |
+| **Браузер** | Google Chrome (latest) |
+| **Інтернет** | 10+ Мбіт/с |
 
-### Необхідне програмне забезпечення
+### Програми (опціонально)
 
-#### Python (опційно, для локального сервера)
+#### Python (для локального сервера)
 ```bash
-# Перевірка версії
+# Перевірте чи встановлено
 python --version
 
-# Якщо не встановлено, завантажте з:
-# https://www.python.org/downloads/
+# Якщо ні, завантажте з https://www.python.org/downloads/
 ```
 
-#### Git (опційно, для клонування)
+#### Git (щоб клонувати проект)
 ```bash
-# Перевірка
+# Перевірте
 git --version
 
-# Якщо не встановлено:
-# https://git-scm.com/download
+# Якщо ні, https://git-scm.com/download
 ```
 
-#### Node.js (опційно, альтернатива Python)
+#### Node.js (альтернатива Python)
 ```bash
-# Перевірка
+# Перевірте
 node --version
-npm --version
 
-# Якщо не встановлено:
-# https://nodejs.org/
+# Якщо ні, https://nodejs.org/
 ```
 
 ---
 
-## 🚀 Крок за кроком встановлення
+## Методи встановлення
 
-### Метод 1: Проста завантаження (для новачків)
+### ✅ Метод 1: Найпростіший (для новачків)
 
-#### Крок 1️⃣: Завантажте файли
+#### Крок 1 - Завантажте
 1. Перейдіть на https://github.com/mrdbv/finesse-terminal
-2. Натисніть кнопку **"Code"** (зелена кнопка)
+2. Натисніть зелену кнопку **"Code"**
 3. Виберіть **"Download ZIP"**
-4. Утримуйте архів в папці на вашому комп'ютері
+4. Зберегти на комп'ютері
 
-#### Крок 2️⃣: Розпакуйте архів
-**Windows:**
-- Правий клік на архів → "Розпакувати всі..."
-
-**macOS:**
-- Двічі клацніть на архів (він розпакується автоматично)
-
-**Linux:**
+#### Крок 2 - Розпакуйте
+**На Windows:** Правий клік → "Розпакувати всі..."
+**На Mac:** Двічі клацніть (розпакується само)
+**На Linux:** 
 ```bash
 unzip finesse-terminal-main.zip
 cd finesse-terminal-main
 ```
 
-#### Крок 3️⃣: Откройте проект
-Перейдіть в розпаковану папку та двічі клацніть на **index.html**
+#### Крок 3 - Запустіть
+Просто двічі клацніть на **index.html** у папці.
 
-✅ **Готово!** Застосунок запуститься в вашому браузері.
+**Готово!** Застосунок запуститься в браузері. 🎉
 
 ---
 
-### Метод 2: Встановлення через Git (для розробників)
+### ✅ Метод 2: Через Git (для розробників)
 
-#### Крок 1️⃣: Відкрийте термінал
+#### Крок 1 - Відкрийте термінал
+**Windows:** Win+X → PowerShell
+**Mac:** Cmd+Space → Terminal
+**Linux:** Ctrl+Alt+T
 
-**Windows (PowerShell):**
-```powershell
-# Натисніть Win+X, виберіть "Windows PowerShell (Admin)"
-```
-
-**macOS:**
-```bash
-# Натисніть Cmd+Space, введіть "Terminal"
-```
-
-**Linux:**
-```bash
-# Натисніть Ctrl+Alt+T або знайдіть Terminal в меню
-```
-
-#### Крок 2️⃣: Клонуємо репозиторій
+#### Крок 2 - Клонуйте проект
 ```bash
 git clone https://github.com/mrdbv/finesse-terminal.git
 cd finesse-terminal
 ```
 
-#### Крок 3️⃣: Запускаємо локальний сервер
+#### Крок 3 - Запустіть сервер
 ```bash
 # Із Python
 python -m http.server 8000
 
-# ІЛИ із Node.js (якщо встановлено)
+# АБО із Node.js
 npx http-server -p 8000
 
-# ІЛИ прямо відкриваємо файл
-# Windows
-start index.html
-
-# macOS
-open index.html
-
-# Linux
-xdg-open index.html
+# АБО прямо файл (без сервера)
+open index.html  # Mac
+start index.html  # Windows
+xdg-open index.html  # Linux
 ```
 
-#### Крок 4️⃣: Відкриваємо в браузері
+#### Крок 4 - Перейдіть в браузер
 ```
 http://localhost:8000
 ```
 
+Готово! 🚀
+
 ---
 
-### Метод 3: Встановлення з Docker
+### ✅ Метод 3: Docker (якщо у вас він встановлено)
 
-Якщо у вас встановлено Docker:
-
+Створіть файл `Dockerfile`:
 ```dockerfile
-# Создаєм файл Dockerfile
 FROM nginx:alpine
 COPY . /usr/share/nginx/html
 EXPOSE 80
 ```
 
+Потім запустіть:
 ```bash
-# Збудуємо образ
+# Збираємо
 docker build -t finesse-terminal .
 
-# Запустимо контейнер
+# Запускаємо контейнер
 docker run -p 8000:80 finesse-terminal
 
-# Відкриваємо http://localhost:8000
+# Відкриваємо
+http://localhost:8000
 ```
 
 ---
 
-## ⚙️ Налаштування проекту
+## ⚙️ Налаштування
 
-### Налаштування 1: Змінення кольорів
+### 1️⃣ Змініть кольори
 
-#### Основна колірна схема
-Відкрийте **styles.css** та знайдіть:
+Відкрийте файл `styles.css` та знайдіть верх файлу:
 
 ```css
 :root {
-    --bg-color: #0B0B0B;           /* Фоновий колір */
-    --accent-color: #00D1FF;       /* Головний колір */
-    --text-white: #FFFFFF;         /* Білий текст */
-    --text-dim: #A0A0A0;          /* Сірий текст */
-    --positive-color: #00ff88;     /* Позитивні зміни (зелений) */
-    --negative-color: #ff4444;     /* Негативні зміни (червоний) */
+    --bg-color: #0B0B0B;        /* Фон - чорний */
+    --accent-color: #00D1FF;    /* Основний колір */
+    --text-white: #FFFFFF;      /* Білий текст */
+    --text-dim: #A0A0A0;       /* Сірий текст */
+    --positive-color: #00ff88;  /* Зелений (позитив) */
+    --negative-color: #ff4444;  /* Червоний (негатив) */
 }
 ```
 
-#### Приклади змін
+**Приклади:**
 ```css
-/* Сріблястий акцент */
+/* Серебристий */
 --accent-color: #C0C0C0;
 
-/* Червоний акцент */
+/* Червоний */
 --accent-color: #FF0000;
 
-/* Оранжевий акцент */
+/* Оранжевий */
 --accent-color: #FFA500;
 
-/* Зелений акцент */
+/* Зелений */
 --accent-color: #00FF00;
 ```
 
+Збережіть - колір змінився! 🎨
+
 ---
 
-### Налаштування 2: Додання нових монет
+### 2️⃣ Додайте нові монети
 
-Відкрийте **index.html**, знайдіть блок `coin-list`:
+Відкрийте `index.html`, знайдіть блок `coin-list` та додайте:
 
 ```html
-<div id="coinList" class="coin-list">
-    <!-- Існуючі монети -->
-    
-    <!-- Додаємо нову монету -->
-    <div class="coin-item" onclick="selectCoin(this, 'YOUR_SYMBOL')">
-        <div class="coin-name">НАЗВА МОНЕТИ</div>
-        <div class="coin-price">$0.00000000</div>
-        <div class="coin-change positive">+0.0%</div>
-    </div>
+<div class="coin-item" onclick="selectCoin(this, 'СИМВОЛ')">
+    <div class="coin-name">НАЗВА МОНЕТИ</div>
+    <div class="coin-price">$0.00</div>
+    <div class="coin-change positive">+0.0%</div>
 </div>
 ```
 
-#### Приклад: Додавання Bitcoin
+**Приклад (додаємо Bitcoin):**
 ```html
 <div class="coin-item" onclick="selectCoin(this, 'BTC')">
     <div class="coin-name">BTC</div>
@@ -264,25 +234,23 @@ docker run -p 8000:80 finesse-terminal
 </div>
 ```
 
-#### Важливо!
-Змініть також у **script.js**:
+**Важно!** Також оновіть `script.js`:
 ```javascript
-// Додайте у функцію selectCoin
 const coinSymbols = {
     'SHIB': 'BINANCE:SHIBUSDT',
     'DOGE': 'BINANCE:DOGEUSDT',
     'PEPE': 'BINANCE:PEPEUSDT',
     'BONK': 'BINANCE:BONKUSDT',
     'FLOKI': 'BINANCE:FLOKIUSDT',
-    'BTC': 'BINANCE:BTCUSDT'  // Нова монета
+    'BTC': 'BINANCE:BTCUSDT'  // ← Нова монета
 };
 ```
 
 ---
 
-### Налаштування 3: Змінення шрифтів
+### 3️⃣ Змініть шрифти
 
-Відкрийте **styles.css** та знайдіть:
+У `styles.css` знайдіть цей блок:
 
 ```css
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap');
@@ -293,132 +261,132 @@ const coinSymbols = {
 }
 ```
 
-#### Альтернативні шрифти Google Fonts
+**Альтернативи (Google Fonts):**
 ```css
-/* Робото */
+/* Робото - чистий шрифт */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 --font-main: 'Roboto', sans-serif;
 
-/* Fira Code для коду */
+/* Fira Code - для коду */
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
 --font-mono: 'Fira Code', monospace;
 
-/* Poppins */
+/* Poppins - сучасний */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
 --font-main: 'Poppins', sans-serif;
 ```
 
 ---
 
-### Налаштування 4: Налаштування сайдбара
+### 4️⃣ Налаштуйте сайдбар
 
-Знайдіть у **styles.css**:
+У `styles.css` знайдіть:
 
 ```css
 .sidebar {
-    width: 350px;              /* Ширина */
+    width: 350px;              /* Ширина тут */
     background: rgba(0, 0, 0, 0.8);
     border-right: 1px solid rgba(0, 209, 255, 0.2);
 }
 ```
 
-#### Змінення ширини
+Змініть ширину:
 ```css
 .sidebar {
-    width: 300px;  /* Вуже */
+    width: 300px;  /* Вуже, більше місця для графіків */
     /* або */
-    width: 400px;  /* Ширше */
+    width: 400px;  /* Ширше, більше монет видно */
 }
 ```
 
 ---
 
-## 🔨 Запуск для розробки
+## 🔨 Розробка
 
-### Налаштування IDE
+### За допомогою VS Code
 
-#### VS Code
-1. Встановіть розширення: **Live Server**
-2. Правий клик на **index.html** → **Open with Live Server**
-3. Автоматично оновлюється при збереженні файлу
+1. **Встановіть розширення:** Live Server
+2. **Правий клік** на `index.html`
+3. **"Open with Live Server"**
+4. Будь-які зміни у файлі відразу будуть видно в браузері ✨
 
-#### WebStorm
-1. Натисніть правою кнопкою мишки на **index.html**
-2. Виберіть **Run**
-3. Застосунок запуститься в браузері
+### WebStorm
 
-#### Sublime Text
+1. Правий клік на `index.html`
+2. Клацніть "Run"
+3. Браузер відкриється сам
+
+### Sublime Text
 ```bash
-# Встановимо пакет Simple HTTP Server
+# Встановіть Simple HTTP Server пакет
 # View → Show Console
-# Введемо: import urllib.request,urllib.parse,urllib.error, http.server, socketserver, os
-# (це запустить локальний сервер)
+# Запустить локальний сервер
 ```
 
 ---
 
 ### DevTools для налагодження
 
-#### Відкриття DevTools
+Нажміть у браузері:
 ```
 Windows/Linux: F12 або Ctrl+Shift+I
-macOS: Cmd+Option+I
+Mac: Cmd+Option+I
 ```
 
-#### Корисні вкладки
-| Вкладка | Використання |
-|--------|-------------|
-| **Elements** | Переглядання та редагування HTML/CSS |
-| **Console** | Запуск JavaScript команд |
-| **Network** | Перегляд запитів TradingView |
-| **Application** | Перегляд LocalStorage та SessionStorage |
-| **Performance** | Аналіз швидкості |
+**Корисні вкладки:**
+| Вкладка | Для чого |
+|--------|---------|
+| **Elements** | Дивитися та редагувати HTML/CSS |
+| **Console** | Виконувати JavaScript команди |
+| **Network** | Дивитися запити до TradingView |
+| **Application** | Стан LocalStorage і SessionStorage |
+| **Performance** | Як швидко все завантажується |
 
-#### Консольні команди для тестування
+**Команди для тестування:**
 ```javascript
-// Перевірити стан
+// Дивитися стан програми
 console.log(appState);
 
-// Переключити екран
+// Перемкнути екран
 showScreen('terminal');
 
 // Обрати монету
 selectCoin(document.querySelector('.coin-item'), 'SHIB');
 
-// Змінити колір акцента
+// Змінити акцент
 document.documentElement.style.setProperty('--accent-color', '#FF00FF');
 
-// Перевірити LocalStorage
+// Дивитися LocalStorage
 console.log(localStorage);
 ```
 
 ---
 
-## 🌐 Виробничі налаштування
+## 🌐 Запуск в мережу
 
-### Деплой на Netlify
+### На Netlify (найпростіше)
 
-#### Способ 1: Через GitHub
-1. Загруженіте проект на GitHub
+**Спосіб 1 - через GitHub:**
+1. Завантажте проект на GitHub
 2. Перейдіть на https://netlify.com
 3. Натисніть "New site from Git"
-4. Виберіть GitHub та репозиторій
+4. Виберіть ваш репозиторій
 5. Натисніть "Deploy"
 
-#### Способ 2: Прямо з папки
-1. Перейдіть на https://netlify.com
-2. Перетягніть папку проекту в зону завантаження
-3. Готово за 30 секунд!
+**Спосіб 2 - просто перетягніть папку:**
+1. На https://netlify.com
+2. Перетягніть папку проекту
+3. За 30 секунд готово!
 
 ---
 
-### Деплой на Vercel
+### На Vercel
 
 ```bash
-# 1. Встановлюємо Vercel CLI
+# 1. Встановіть Vercel CLI
 npm install -g vercel
 
-# 2. Логіниемося
+# 2. Логініться
 vercel login
 
 # 3. Дисплоимся
@@ -429,23 +397,23 @@ vercel
 
 ---
 
-### Деплой на GitHub Pages
+### На GitHub Pages
 
 ```bash
-# 1. Створіть репозиторій з ім'ям username.github.io
+# 1. Клонуємо (у вашу папку)
 git clone https://github.com/YOUR_USERNAME/finesse-terminal.git
 cd finesse-terminal
 
 # 2. Додаємо файли
 git add .
-git commit -m "Initial commit"
+git commit -m "Мій проект"
 git push origin main
 
-# 3. Перейдіть в Settings → Pages
-# 4. Виберіть Source: main branch
-# 5. Зберегти
+# 3. На GitHub: Settings → Pages
+# 4. Source: main branch
+# 5. Save
 
-# Ваш сайт доступний на:
+# Готово! Ваш сайт на:
 # https://YOUR_USERNAME.github.io
 ```
 
@@ -453,67 +421,68 @@ git push origin main
 
 ## ✅ Перевірка
 
-### Чеклист встановлення
-
-- ✅ Звантажено все файлів проекту
+### Чек-лист
+- ✅ Усі файли завантажені
 - ✅ Локальний сервер запущений
-- ✅ Браузер відкрив `http://localhost:8000`
-- ✅ Екран завантаження показує матричний ефект
-- ✅ Головна сторінка завантажується нормально
-- ✅ Кнопки "Вхід" і "Реєстрація" працюють
-- ✅ Форма аутентифікації відображається
-- ✅ Терміналу показує список монет
+- ✅ Браузер показує `http://localhost:8000`
+- ✅ Матричний ефект при завантаженні
+- ✅ Головна сторінка завантажується
+- ✅ Кнопки "Вхід" та "Реєстрація" працюють
+- ✅ Форма входу з'являється
+- ✅ Панель з монетами видна
 - ✅ Графік TradingView завантажується
-- ✅ Курсор змінюється при натисканні кнопки
-- ✅ Логаут повертає на головну сторінку
+- ✅ Курсор змінюється
+- ✅ Вихід повертає на початок
 
-### Тестування браузерів
-
+### Браузери
 | Браузер | Версія | Статус |
 |---------|--------|--------|
-| Chrome | 120+ | ✅ |
-| Firefox | 121+ | ✅ |
-| Safari | 17+ | ✅ |
-| Edge | 120+ | ✅ |
+| Chrome | 120+ | ✅ Чудово |
+| Firefox | 121+ | ✅ Чудово |
+| Safari | 17+ | ✅ Чудово |
+| Edge | 120+ | ✅ Чудово |
 
 ---
 
-## 🔧 Вирішення типових проблем
+## 🔧 Якщо щось не працює
 
 ### Проблема: Сервер не запускається
 ```bash
-# Може бути, що порт 8000 зайнятий
-# Спробуємо інший порт
+# Може бути, порт 8000 зайнятий. Спробуйте інший:
 python -m http.server 3000
+# Тепер перейдіть на http://localhost:3000
 ```
 
-### Проблема: Браузер не знаходить сторінку
+### Проблема: "Сторінку не знайдено"
 ```bash
-# Переконайтеся, що ви в правильній папці
+# Перевірте, що ви в правильній папці
 cd finesse-terminal
-ls -la index.html  # Перевіряємо, що файл існує
+ls -la index.html
 ```
 
-### Проблема: Графіки не завантажуються
-- Перевірте інтернет-з'єднання
-- Очистіть кеш браузера (Ctrl+Shift+Delete)
+### Проблема: Графіки не загружаються
+- Перевірте інтернет
+- Очистіть кеш (Ctrl+Shift+Delete)
 - Спробуйте приватний режим браузера
+- Перезавантажте сторінку (F5)
 
 ### Проблема: Монети не оновлюються
-- Перезагрузіть сторінку (F5)
+- Перезавантажте сторінку (F5)
 - Очистіть SessionStorage в DevTools
-- Перевірте LiveStream у DevTools → Network
+- Перевірте Network у DevTools
 
 ---
 
-## 📞 Підтримка
+## 📞 Потреба в допомозі?
 
-- 🐛 Проблема? [Сповіщення про помилку](https://github.com/mrdbv/finesse-terminal/issues)
-- 💬 Питання? [Дискусії](https://github.com/mrdbv/finesse-terminal/discussions)
-- 📖 Документація: Дивіться інші файли .md
+- 🐛 [Повідомити про помилку](https://github.com/mrdbv/finesse-terminal/issues)
+- 💬 [Задати питання](https://github.com/mrdbv/finesse-terminal/discussions)
+- 📖 Прочитайте README.md для більше інформації
 
 ---
 
-**Версія налаштування**: 1.0  
-**Оновлено**: 2026-05-07  
-**Автор**: mrdbv
+**Версія налаштування:** 2.0  
+**Оновлено:** 2026-05-12  
+**Автор:** mrdbv
+
+Щасти вам! 🚀
