@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="FINE$$E - Solana Trading Terminal. Professional cryptocurrency trading platform with real-time charts, memcoin tracking, and smart contract editor.">
+    <meta name="description" content="FINE$$E - Solana Trading Terminal. Professional cryptocurrency trading platform with real-time charts, memecoin tracking, and smart contract editor.">
     <title>FINE$$E | Terminal v2.6</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@1,800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
@@ -36,6 +36,14 @@
                     <div class="loading-bar-fill"></div>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- PUMP NOTIFICATION -->
+    <div class="pump-notification" id="pumpNotification">
+        <div class="pump-content">
+            <div class="pump-title" id="pumpTitle">🚀 PUMP DETECTED</div>
+            <div class="pump-details" id="pumpDetails">New coin detected with high volume!</div>
         </div>
     </div>
 
@@ -110,32 +118,37 @@
             <!-- SIDEBAR -->
             <div class="terminal-sidebar">
                 <div class="sidebar-section">
-                    <div class="sidebar-title">📊 Memcoins</div>
-                    <div class="coin-item active" onclick="selectCoin(this, 'SHIB')">
+                    <div class="sidebar-title">📊 Memecoins</div>
+                    <div class="coin-item active" onclick="selectCoin(this, 'SHIB', 'SHIBA INU')">
                         <div class="coin-name">SHIBA INU</div>
                         <div class="coin-price">$0.0000285</div>
                         <div class="coin-change positive">+12.5%</div>
                     </div>
-                    <div class="coin-item" onclick="selectCoin(this, 'DOGE')">
+                    <div class="coin-item" onclick="selectCoin(this, 'DOGE', 'DOGECOIN')">
                         <div class="coin-name">DOGECOIN</div>
                         <div class="coin-price">$0.3842</div>
                         <div class="coin-change positive">+8.3%</div>
                     </div>
-                    <div class="coin-item" onclick="selectCoin(this, 'PEPE')">
+                    <div class="coin-item" onclick="selectCoin(this, 'PEPE', 'PEPE')">
                         <div class="coin-name">PEPE</div>
                         <div class="coin-price">$0.0000012</div>
                         <div class="coin-change negative">-5.2%</div>
                     </div>
-                    <div class="coin-item" onclick="selectCoin(this, 'BONK')">
+                    <div class="coin-item" onclick="selectCoin(this, 'BONK', 'BONK')">
                         <div class="coin-name">BONK</div>
                         <div class="coin-price">$0.00001234</div>
                         <div class="coin-change positive">+15.7%</div>
                     </div>
-                    <div class="coin-item" onclick="selectCoin(this, 'FLOKI')">
+                    <div class="coin-item" onclick="selectCoin(this, 'FLOKI', 'FLOKI')">
                         <div class="coin-name">FLOKI</div>
                         <div class="coin-price">$0.00002156</div>
                         <div class="coin-change negative">-2.1%</div>
                     </div>
+                </div>
+
+                <div class="sidebar-section" id="newCoinsSection" style="display: none;">
+                    <div class="sidebar-title">🚀 New Pumps</div>
+                    <div id="newCoinsList"></div>
                 </div>
 
                 <div class="sidebar-section">
@@ -168,14 +181,14 @@
                         <div class="code-line">&nbsp;&nbsp;accounts: &[AccountInfo],</div>
                         <div class="code-line">&nbsp;&nbsp;instruction_data: &[u8],</div>
                         <div class="code-line">) -&gt; ProgramResult {</div>
-                        <div class="code-line">&nbsp;&nbsp;msg!(<span style="color: #00ff88;">&quot;Memecoin processor initialized!&quot;</span>);</div>
+                        <div class="code-line">&nbsp;&nbsp;msg!(<span style="color: #00ff88;">"Memecoin processor initialized!"</span>);</div>
                         <div class="code-line">&nbsp;&nbsp;<span style="color: var(--accent-color);">Ok</span>(())</div>
                         <div class="code-line">}</div>
                     </div>
                 </div>
 
                 <div class="chart-container">
-                    <div class="chart-header">📈 SHIBA INU (SHIB/USDT) - LIVE CHART</div>
+                    <div class="chart-header" id="chartHeader">📈 SHIBA INU (SHIB/USDT) - LIVE CHART</div>
                     <iframe class="chart-iframe" src="https://s.tradingview.com/widgetembed/?symbol=BINANCE%3ASHIBUSDT&interval=1&theme=dark&style=1" frameborder="0"></iframe>
                 </div>
             </div>
