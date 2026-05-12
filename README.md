@@ -48,7 +48,7 @@
 
 ```
 finesse-terminal/
-├── index.html    ← Struktura сторінки
+├── index.html    ← Структура сторінки
 ├── styles.css    ← Всі кольори та анімації
 ├── script.js     ← Що робить все це працювати
 └── README.md     ← Цей посібник
@@ -325,4 +325,4 @@ docker run -p 8000:80 finesse-terminal
 
 ---
 
-**Наслідуйтеся! 🚀**
+**Насолоджуйтесь! 🚀**
