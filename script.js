@@ -38,13 +38,18 @@ const cursorTypes = [
     { class: 'cursor-ghost', name: 'Ghost' }
 ];
 
-// Coin data mapping
+// Coin data mapping - EXTENDED TO SUPPORT NEW COINS
 const coinDataMap = {
     'SHIB': { name: 'SHIBA INU', symbol: 'SHIBUSDT', pair: 'SHIB' },
     'DOGE': { name: 'DOGECOIN', symbol: 'DOGEUSDT', pair: 'DOGE' },
     'PEPE': { name: 'PEPE', symbol: 'PEPEUSDT', pair: 'PEPE' },
     'BONK': { name: 'BONK', symbol: 'BONKUSDT', pair: 'BONK' },
-    'FLOKI': { name: 'FLOKI', symbol: 'FLOKIUSDT', pair: 'FLOKI' }
+    'FLOKI': { name: 'FLOKI', symbol: 'FLOKIUSDT', pair: 'FLOKI' },
+    'WIF': { name: 'DOGWIFHAT', symbol: 'WIFUSDT', pair: 'WIF' },
+    'ORCA': { name: 'ORCA', symbol: 'ORCAUSDT', pair: 'ORCA' },
+    'COPE': { name: 'COPE', symbol: 'COPEUSDT', pair: 'COPE' },
+    'SAMO': { name: 'SAMOYEDCOIN', symbol: 'SAMOUSDT', pair: 'SAMO' },
+    'JUP': { name: 'JUPITER', symbol: 'JUPUSDT', pair: 'JUP' }
 };
 
 // ============================================
@@ -154,7 +159,7 @@ function handleLogout() {
 // ============================================
 
 /**
- * Select a cryptocurrency and update chart
+ * Select a cryptocurrency and update chart in real-time
  * @param {HTMLElement} element - The clicked coin item
  * @param {string} symbol - Cryptocurrency symbol (SHIB, DOGE, etc.)
  * @param {string} coinName - Full coin name (SHIBA INU, DOGECOIN, etc.)
@@ -166,17 +171,41 @@ function selectCoin(element, symbol, coinName) {
     // Add active class to selected coin
     element.classList.add('active');
     
-    // Get coin data
-    const coinData = coinDataMap[symbol];
-    if (!coinData) return;
+    // Get coin data or create it if new
+    let coinData = coinDataMap[symbol];
+    if (!coinData) {
+        // Create new coin data if it doesn't exist (for dynamically added pumps)
+        coinData = {
+            name: coinName,
+            symbol: symbol.toUpperCase() + 'USDT',
+            pair: symbol.toUpperCase()
+        };
+        coinDataMap[symbol] = coinData;
+    }
     
     // Update chart header with dynamic coin name
     const chartHeader = document.getElementById('chartHeader');
     chartHeader.textContent = `📈 ${coinName} (${coinData.pair}/USDT) - LIVE CHART`;
     
-    // Update chart iframe with new coin data
+    // Update chart iframe with new coin data - FORCE REFRESH
+    const chartContainer = document.querySelector('.chart-container');
     const chartIframe = document.querySelector('.chart-iframe');
-    chartIframe.src = `https://s.tradingview.com/widgetembed/?symbol=BINANCE%3A${coinData.symbol}&interval=1&theme=dark&style=1`;
+    
+    // Create new iframe to force reload
+    const newIframe = document.createElement('iframe');
+    newIframe.className = 'chart-iframe';
+    newIframe.src = `https://s.tradingview.com/widgetembed/?symbol=BINANCE%3A${coinData.symbol}&interval=1&theme=dark&style=1`;
+    newIframe.frameBorder = '0';
+    
+    // Replace old iframe with new one
+    chartIframe.parentNode.replaceChild(newIframe, chartIframe);
+    
+    // Add fade-in animation
+    newIframe.style.opacity = '0';
+    newIframe.style.transition = 'opacity 0.3s ease-in';
+    setTimeout(() => {
+        newIframe.style.opacity = '1';
+    }, 10);
 }
 
 // ============================================
@@ -232,6 +261,14 @@ function addNewPumpCoin(symbol, name, price, change) {
     // Show new pumps section
     newCoinsSection.style.display = 'block';
     
+    // Check if coin already exists
+    const existingCoins = newCoinsList.querySelectorAll('.coin-item');
+    for (let coin of existingCoins) {
+        if (coin.textContent.includes(name)) {
+            return; // Coin already exists
+        }
+    }
+    
     // Create new coin element
     const coinElement = document.createElement('div');
     coinElement.className = 'coin-item new-pump';
@@ -241,10 +278,9 @@ function addNewPumpCoin(symbol, name, price, change) {
         <div class="coin-change positive">${change}</div>
     `;
     
-    // Add click handler
+    // Add click handler with real-time chart loading
     coinElement.onclick = () => {
         selectCoin(coinElement, symbol, name);
-        coinElement.classList.add('active');
     };
     
     // Add to list
