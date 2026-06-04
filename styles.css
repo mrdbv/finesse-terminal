@@ -595,6 +595,7 @@ footer {
     display: none;
     height: 100vh;
     overflow: hidden;
+    flex-direction: column;
 }
 
 .terminal-page.show {
@@ -602,12 +603,35 @@ footer {
     animation: fadeIn 0.6s ease-out;
 }
 
+.logout-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 0, 0, 0.2);
+    border: 1px solid rgba(255, 0, 0, 0.5);
+    color: #ff4444;
+    padding: 8px 16px;
+    font-family: 'JetBrains Mono';
+    font-size: 10px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: var(--transition);
+    z-index: 1000;
+    animation: slideInFromTop 0.5s ease-out;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 0, 0, 0.4);
+    border-color: #ff4444;
+    box-shadow: 0 0 15px rgba(255, 68, 68, 0.3);
+}
+
 .terminal-header {
     background: rgba(0, 209, 255, 0.05);
     border-bottom: 1px solid var(--glass-border);
     padding: 20px 30px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
 }
 
@@ -620,23 +644,6 @@ footer {
 
 .terminal-title span {
     color: var(--accent-color);
-}
-
-.logout-btn {
-    background: rgba(255, 0, 0, 0.2);
-    border: 1px solid rgba(255, 0, 0, 0.5);
-    color: #ff4444;
-    padding: 8px 16px;
-    font-family: 'JetBrains Mono';
-    font-size: 10px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.logout-btn:hover {
-    background: rgba(255, 0, 0, 0.4);
-    border-color: #ff4444;
 }
 
 .terminal-content {
