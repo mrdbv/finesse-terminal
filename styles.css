@@ -667,50 +667,76 @@ footer {
 }
 
 .coin-item {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    padding: 12px;
+    background: linear-gradient(135deg, rgba(0, 209, 255, 0.08) 0%, rgba(0, 209, 255, 0.02) 100%);
+    border: 1px solid rgba(0, 209, 255, 0.2);
+    padding: 14px 16px;
     margin-bottom: 10px;
     cursor: pointer;
-    transition: var(--transition);
-    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    border-radius: 12px;
+    backdrop-filter: blur(8px);
+    position: relative;
+    overflow: hidden;
+}
+
+.coin-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s;
+    pointer-events: none;
+}
+
+.coin-item:hover::before {
+    left: 100%;
 }
 
 .coin-item:hover {
     border-color: var(--accent-color);
-    background: rgba(0, 209, 255, 0.1);
+    background: linear-gradient(135deg, rgba(0, 209, 255, 0.15) 0%, rgba(0, 209, 255, 0.05) 100%);
+    box-shadow: 0 8px 24px rgba(0, 209, 255, 0.15);
+    transform: translateX(4px);
 }
 
 .coin-item.active {
     border-color: var(--accent-color);
-    background: rgba(0, 209, 255, 0.2);
+    background: linear-gradient(135deg, rgba(0, 209, 255, 0.25) 0%, rgba(0, 209, 255, 0.08) 100%);
+    box-shadow: 0 0 20px rgba(0, 209, 255, 0.3), inset 0 0 10px rgba(0, 209, 255, 0.1);
 }
 
 .coin-item.new-pump {
-    border: 1px solid rgba(0, 255, 136, 0.5);
-    background: rgba(0, 255, 136, 0.1);
+    border: 1px solid rgba(0, 255, 136, 0.4);
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.12) 0%, rgba(0, 255, 136, 0.02) 100%);
 }
 
 .coin-item.new-pump:hover {
     border-color: #00ff88;
-    background: rgba(0, 255, 136, 0.2);
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.2) 0%, rgba(0, 255, 136, 0.05) 100%);
+    box-shadow: 0 8px 24px rgba(0, 255, 136, 0.2);
 }
 
 .coin-name {
     font-size: 12px;
     font-weight: 700;
     color: var(--text-white);
+    letter-spacing: 0.5px;
 }
 
 .coin-price {
-    font-size: 10px;
+    font-size: 11px;
     color: var(--accent-color);
-    margin-top: 5px;
+    margin-top: 6px;
+    font-weight: 500;
 }
 
 .coin-change {
     font-size: 10px;
-    margin-top: 3px;
+    margin-top: 4px;
+    font-weight: 600;
 }
 
 .coin-change.positive {
