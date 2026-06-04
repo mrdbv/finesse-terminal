@@ -95,7 +95,7 @@ function generateMatrixChars() {
     }
 }
 
-generateMat rixChars();
+generateMatrixChars();
 
 // ============================================
 // DEMO ACCOUNT SYSTEM
