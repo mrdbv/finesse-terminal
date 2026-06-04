@@ -47,6 +47,50 @@
         </div>
     </div>
 
+    <!-- TRADING MODAL -->
+    <div class="trading-modal" id="tradingModal">
+        <div class="modal-overlay" onclick="closeTradeModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalCoinName">SHIBA INU</h2>
+                <button class="modal-close" onclick="closeTradeModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="trade-section">
+                    <div class="current-price">
+                        <span style="color: var(--text-dim);">Current Price:</span>
+                        <span id="currentPrice" style="font-size: 24px; color: var(--accent-color);">$0.00</span>
+                    </div>
+                    <div class="trade-tabs">
+                        <button class="trade-tab active" onclick="switchTradeTab('buy')">BUY</button>
+                        <button class="trade-tab" onclick="switchTradeTab('sell')">SELL</button>
+                    </div>
+                    <div class="trade-form">
+                        <div class="form-group">
+                            <label>Amount (USD)</label>
+                            <input type="number" id="tradeAmount" placeholder="0.00" min="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <input type="text" id="tradeQuantity" placeholder="0" readonly>
+                        </div>
+                        <div class="form-info">
+                            <div>Balance: <span id="balanceDisplay" style="color: var(--accent-color);">$100.00</span></div>
+                            <div id="sellWarning" style="display: none; color: #ff4444;">Insufficient coins</div>
+                        </div>
+                        <button id="tradeButton" class="trade-btn buy-btn" onclick="executeTrade()">BUY NOW</button>
+                    </div>
+                </div>
+                <div class="history-section">
+                    <h3>📊 Portfolio</h3>
+                    <div id="portfolioList" class="portfolio-list"></div>
+                    <h3 style="margin-top: 20px;">📈 Transaction History</h3>
+                    <div id="historyList" class="history-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="cursor" class="cursor-dot"></div>
 
     <!-- MAIN PAGE -->
@@ -112,6 +156,7 @@
         <button class="logout-btn" onclick="handleLogout()">LOGOUT</button>
         <div class="terminal-header">
             <div class="terminal-title">FINE<span>$$</span>E // TERMINAL</div>
+            <div class="account-balance">Balance: <span id="accountBalance">$100.00</span></div>
         </div>
 
         <div class="terminal-content">
@@ -119,29 +164,29 @@
             <div class="terminal-sidebar">
                 <div class="sidebar-section">
                     <div class="sidebar-title">📊 Memecoins</div>
-                    <div class="coin-item active" onclick="selectCoin(this, 'SHIB', 'SHIBA INU')">
+                    <div class="coin-item active" onclick="openTradeModal(this, 'SHIB', 'SHIBA INU', 0.0000285)">
                         <div class="coin-name">SHIBA INU</div>
-                        <div class="coin-price">$0.0000285</div>
+                        <div class="coin-price" data-price="0.0000285">$0.0000285</div>
                         <div class="coin-change positive">+12.5%</div>
                     </div>
-                    <div class="coin-item" onclick="selectCoin(this, 'DOGE', 'DOGECOIN')">
+                    <div class="coin-item" onclick="openTradeModal(this, 'DOGE', 'DOGECOIN', 0.3842)">
                         <div class="coin-name">DOGECOIN</div>
-                        <div class="coin-price">$0.3842</div>
+                        <div class="coin-price" data-price="0.3842">$0.3842</div>
                         <div class="coin-change positive">+8.3%</div>
                     </div>
-                    <div class="coin-item" onclick="selectCoin(this, 'PEPE', 'PEPE')">
+                    <div class="coin-item" onclick="openTradeModal(this, 'PEPE', 'PEPE', 0.0000012)">
                         <div class="coin-name">PEPE</div>
-                        <div class="coin-price">$0.0000012</div>
+                        <div class="coin-price" data-price="0.0000012">$0.0000012</div>
                         <div class="coin-change negative">-5.2%</div>
                     </div>
-                    <div class="coin-item" onclick="selectCoin(this, 'BONK', 'BONK')">
+                    <div class="coin-item" onclick="openTradeModal(this, 'BONK', 'BONK', 0.00001234)">
                         <div class="coin-name">BONK</div>
-                        <div class="coin-price">$0.00001234</div>
+                        <div class="coin-price" data-price="0.00001234">$0.00001234</div>
                         <div class="coin-change positive">+15.7%</div>
                     </div>
-                    <div class="coin-item" onclick="selectCoin(this, 'FLOKI', 'FLOKI')">
+                    <div class="coin-item" onclick="openTradeModal(this, 'FLOKI', 'FLOKI', 0.00002156)">
                         <div class="coin-name">FLOKI</div>
-                        <div class="coin-price">$0.00002156</div>
+                        <div class="coin-price" data-price="0.00002156">$0.00002156</div>
                         <div class="coin-change negative">-2.1%</div>
                     </div>
                 </div>
@@ -181,7 +226,7 @@
                         <div class="code-line">&nbsp;&nbsp;accounts: &[AccountInfo],</div>
                         <div class="code-line">&nbsp;&nbsp;instruction_data: &[u8],</div>
                         <div class="code-line">) -&gt; ProgramResult {</div>
-                        <div class="code-line">&nbsp;&nbsp;msg!(<span style="color: #00ff88;">"Memecoin processor initialized!"</span>);</div>
+                        <div class="code-line">&nbsp;&nbsp;msg!(<span style="color: #00ff88;">'Memecoin processor initialized!'</span>);</div>
                         <div class="code-line">&nbsp;&nbsp;<span style="color: var(--accent-color);">Ok</span>(())</div>
                         <div class="code-line">}</div>
                     </div>

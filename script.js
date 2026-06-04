@@ -10,6 +10,7 @@
  * - Real-time chart integration (TradingView)
  * - Solana smart contract editor
  * - Real-time pump detection system
+ * - Demo trading system with portfolio management
  */
 
 
@@ -24,6 +25,7 @@ const authScreen = document.getElementById('authScreen');
 const terminalPage = document.getElementById('terminalPage');
 const mainContainer = document.querySelector('.container');
 const ticker = document.querySelector('.ticker');
+const tradingModal = document.getElementById('tradingModal');
 
 // ============================================
 // STATE VARIABLES
@@ -31,6 +33,17 @@ const ticker = document.querySelector('.ticker');
 let isCustom = true;
 let currentIndex = 0;
 let isAuthenticated = false;
+let currentTradeType = 'buy';
+let selectedCoinSymbol = '';
+let selectedCoinName = '';
+let selectedCoinPrice = 0;
+
+// Demo Account System
+let demoAccount = {
+    balance: 100.00,
+    portfolio: {}, // { symbol: quantity }
+    history: [] // { type, symbol, amount, quantity, price, date }
+};
 
 const cursorTypes = [
     { class: 'cursor-dot', name: 'Dot' },
@@ -38,29 +51,26 @@ const cursorTypes = [
     { class: 'cursor-ghost', name: 'Ghost' }
 ];
 
-// Coin data mapping - EXTENDED TO SUPPORT NEW COINS
+// Coin data mapping
 const coinDataMap = {
-    'SHIB': { name: 'SHIBA INU', symbol: 'SHIBUSDT', pair: 'SHIB' },
-    'DOGE': { name: 'DOGECOIN', symbol: 'DOGEUSDT', pair: 'DOGE' },
-    'PEPE': { name: 'PEPE', symbol: 'PEPEUSDT', pair: 'PEPE' },
-    'BONK': { name: 'BONK', symbol: 'BONKUSDT', pair: 'BONK' },
-    'FLOKI': { name: 'FLOKI', symbol: 'FLOKIUSDT', pair: 'FLOKI' },
-    'WIF': { name: 'DOGWIFHAT', symbol: 'WIFUSDT', pair: 'WIF' },
-    'ORCA': { name: 'ORCA', symbol: 'ORCAUSDT', pair: 'ORCA' },
-    'COPE': { name: 'COPE', symbol: 'COPEUSDT', pair: 'COPE' },
-    'SAMO': { name: 'SAMOYEDCOIN', symbol: 'SAMOUSDT', pair: 'SAMO' },
-    'JUP': { name: 'JUPITER', symbol: 'JUPUSDT', pair: 'JUP' }
+    'SHIB': { name: 'SHIBA INU', symbol: 'SHIBUSDT', pair: 'SHIB', basePrice: 0.0000285 },
+    'DOGE': { name: 'DOGECOIN', symbol: 'DOGEUSDT', pair: 'DOGE', basePrice: 0.3842 },
+    'PEPE': { name: 'PEPE', symbol: 'PEPEUSDT', pair: 'PEPE', basePrice: 0.0000012 },
+    'BONK': { name: 'BONK', symbol: 'BONKUSDT', pair: 'BONK', basePrice: 0.00001234 },
+    'FLOKI': { name: 'FLOKI', symbol: 'FLOKIUSDT', pair: 'FLOKI', basePrice: 0.00002156 },
+    'WIF': { name: 'DOGWIFHAT', symbol: 'WIFUSDT', pair: 'WIF', basePrice: 2.45 },
+    'ORCA': { name: 'ORCA', symbol: 'ORCAUSDT', pair: 'ORCA', basePrice: 0.542 },
+    'COPE': { name: 'COPE', symbol: 'COPEUSDT', pair: 'COPE', basePrice: 0.0234 },
+    'SAMO': { name: 'SAMOYEDCOIN', symbol: 'SAMOUSDT', pair: 'SAMO', basePrice: 0.0145 },
+    'JUP': { name: 'JUPITER', symbol: 'JUPUSDT', pair: 'JUP', basePrice: 0.847 }
 };
 
 // ============================================
 // INITIALIZATION
 // ============================================
 
-/**
- * Handle page load event
- * Shows loading screen for 2.5 seconds then hides it
- */
 window.addEventListener('load', () => {
+    loadDemoAccount();
     setTimeout(() => {
         loadingScreen.classList.add('hidden');
         setTimeout(() => {
@@ -69,10 +79,6 @@ window.addEventListener('load', () => {
     }, 2500);
 });
 
-/**
- * Generate random matrix characters for loading screen
- * Creates falling katakana characters effect
- */
 function generateMatrixChars() {
     const matrixBg = document.getElementById('matrixBg');
     matrixBg.innerHTML = '';
@@ -89,17 +95,39 @@ function generateMatrixChars() {
     }
 }
 
-// Initialize matrix effect on page load
-generateMatrixChars();
+generateMat rixChars();
+
+// ============================================
+// DEMO ACCOUNT SYSTEM
+// ============================================
+
+function loadDemoAccount() {
+    const saved = localStorage.getItem('fineAccountData');
+    if (saved) {
+        demoAccount = JSON.parse(saved);
+    } else {
+        demoAccount = {
+            balance: 100.00,
+            portfolio: {},
+            history: []
+        };
+        saveDemoAccount();
+    }
+}
+
+function saveDemoAccount() {
+    localStorage.setItem('fineAccountData', JSON.stringify(demoAccount));
+}
+
+function updateBalanceDisplay() {
+    document.getElementById('accountBalance').textContent = '$' + demoAccount.balance.toFixed(2);
+    document.getElementById('balanceDisplay').textContent = '$' + demoAccount.balance.toFixed(2);
+}
 
 // ============================================
 // AUTHENTICATION FLOW
 // ============================================
 
-/**
- * Show authentication screen
- * @param {string} type - 'Вхід' (Login) or 'Реєстрація' (Register)
- */
 function showAuthScreen(type) {
     mainContainer.style.display = 'none';
     ticker.style.display = 'none';
@@ -109,11 +137,6 @@ function showAuthScreen(type) {
     authButton.textContent = type === 'Вхід' ? 'AUTHENTICATE' : 'REGISTER';
 }
 
-/**
- * Handle authentication form submission
- * Shows loading bar and transitions to terminal after 2 seconds
- * @param {Event} event - Form submit event
- */
 function handleAuth(event) {
     event.preventDefault();
     
@@ -125,23 +148,18 @@ function handleAuth(event) {
     const loadingBar = document.getElementById('authLoadingBar');
     loadingBar.style.display = 'block';
 
-    // Simulate authentication process (2 seconds)
     setTimeout(() => {
         isAuthenticated = true;
         authScreen.classList.remove('show');
         mainContainer.style.display = 'none';
         ticker.style.display = 'none';
         terminalPage.classList.add('show');
+        updateBalanceDisplay();
         
-        // Start pump detection when authenticated
         startPumpDetection();
     }, 2000);
 }
 
-/**
- * Handle logout
- * Returns to main page and clears auth form
- */
 function handleLogout() {
     isAuthenticated = false;
     terminalPage.classList.remove('show');
@@ -149,32 +167,200 @@ function handleLogout() {
     ticker.style.display = 'block';
     document.getElementById('authUsername').value = '';
     document.getElementById('authPassword').value = '';
-    
-    // Stop pump detection
+    closeTradeModal();
     stopPumpDetection();
+}
+
+// ============================================
+// TRADING MODAL
+// ============================================
+
+function openTradeModal(element, symbol, name, price) {
+    selectedCoinSymbol = symbol;
+    selectedCoinName = name;
+    selectedCoinPrice = price * (0.8 + Math.random() * 0.4); // Simulate price variation
+    
+    document.getElementById('modalCoinName').textContent = name;
+    document.getElementById('currentPrice').textContent = '$' + selectedCoinPrice.toExponential(8);
+    document.getElementById('tradeAmount').value = '';
+    document.getElementById('tradeQuantity').textContent = '0';
+    currentTradeType = 'buy';
+    
+    updateTradeButtons();
+    updatePortfolioDisplay();
+    updateHistoryDisplay();
+    
+    tradingModal.style.display = 'flex';
+    tradingModal.style.animation = 'fadeIn 0.3s ease-out';
+}
+
+function closeTradeModal() {
+    tradingModal.style.display = 'none';
+}
+
+function switchTradeTab(type) {
+    currentTradeType = type;
+    document.querySelectorAll('.trade-tab').forEach(tab => tab.classList.remove('active'));
+    event.target.classList.add('active');
+    updateTradeButtons();
+}
+
+function updateTradeButtons() {
+    const btn = document.getElementById('tradeButton');
+    if (currentTradeType === 'buy') {
+        btn.textContent = 'BUY NOW';
+        btn.className = 'trade-btn buy-btn';
+    } else {
+        btn.textContent = 'SELL NOW';
+        btn.className = 'trade-btn sell-btn';
+    }
+}
+
+// Update quantity when amount changes
+document.addEventListener('input', (e) => {
+    if (e.target.id === 'tradeAmount') {
+        const amount = parseFloat(e.target.value) || 0;
+        const quantity = amount / selectedCoinPrice;
+        document.getElementById('tradeQuantity').textContent = quantity.toFixed(8);
+    }
+});
+
+function executeTrade() {
+    const amount = parseFloat(document.getElementById('tradeAmount').value);
+    
+    if (isNaN(amount) || amount <= 0) {
+        alert('Please enter a valid amount');
+        return;
+    }
+    
+    if (currentTradeType === 'buy') {
+        if (amount > demoAccount.balance) {
+            alert('Insufficient balance!');
+            return;
+        }
+        
+        const quantity = amount / selectedCoinPrice;
+        demoAccount.balance -= amount;
+        demoAccount.portfolio[selectedCoinSymbol] = (demoAccount.portfolio[selectedCoinSymbol] || 0) + quantity;
+        
+        demoAccount.history.push({
+            type: 'BUY',
+            symbol: selectedCoinSymbol,
+            name: selectedCoinName,
+            amount: amount,
+            quantity: quantity,
+            price: selectedCoinPrice,
+            date: new Date().toLocaleString('uk-UA')
+        });
+    } else {
+        // SELL
+        const availableQty = demoAccount.portfolio[selectedCoinSymbol] || 0;
+        const quantity = amount / selectedCoinPrice;
+        
+        if (quantity > availableQty) {
+            alert('Insufficient coins to sell!');
+            document.getElementById('sellWarning').style.display = 'block';
+            return;
+        }
+        
+        demoAccount.portfolio[selectedCoinSymbol] -= quantity;
+        if (demoAccount.portfolio[selectedCoinSymbol] < 0.00000001) {
+            delete demoAccount.portfolio[selectedCoinSymbol];
+        }
+        
+        demoAccount.balance += amount;
+        
+        demoAccount.history.push({
+            type: 'SELL',
+            symbol: selectedCoinSymbol,
+            name: selectedCoinName,
+            amount: amount,
+            quantity: quantity,
+            price: selectedCoinPrice,
+            date: new Date().toLocaleString('uk-UA')
+        });
+    }
+    
+    saveDemoAccount();
+    updateBalanceDisplay();
+    updatePortfolioDisplay();
+    updateHistoryDisplay();
+    document.getElementById('tradeAmount').value = '';
+    document.getElementById('tradeQuantity').textContent = '0';
+    document.getElementById('sellWarning').style.display = 'none';
+}
+
+function updatePortfolioDisplay() {
+    const portfolioList = document.getElementById('portfolioList');
+    portfolioList.innerHTML = '';
+    
+    let hasCoins = false;
+    for (const [symbol, quantity] of Object.entries(demoAccount.portfolio)) {
+        if (quantity > 0) {
+            hasCoins = true;
+            const coinData = coinDataMap[symbol];
+            const price = coinData ? coinData.basePrice * (0.8 + Math.random() * 0.4) : 0;
+            const value = quantity * price;
+            
+            const item = document.createElement('div');
+            item.className = 'portfolio-item';
+            item.innerHTML = `
+                <div style="display: flex; justify-content: space-between;">
+                    <span>${symbol}</span>
+                    <span>${quantity.toFixed(8)}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-dim);">
+                    <span>@$${price.toExponential(4)}</span>
+                    <span>= $${value.toFixed(2)}</span>
+                </div>
+            `;
+            portfolioList.appendChild(item);
+        }
+    }
+    
+    if (!hasCoins) {
+        portfolioList.innerHTML = '<div style="color: var(--text-dim); font-size: 10px;">Empty</div>';
+    }
+}
+
+function updateHistoryDisplay() {
+    const historyList = document.getElementById('historyList');
+    historyList.innerHTML = '';
+    
+    const recent = demoAccount.history.slice(-5).reverse();
+    if (recent.length === 0) {
+        historyList.innerHTML = '<div style="color: var(--text-dim); font-size: 10px;">No transactions</div>';
+        return;
+    }
+    
+    recent.forEach(trade => {
+        const item = document.createElement('div');
+        item.className = `history-item ${trade.type.toLowerCase()}`;
+        const color = trade.type === 'BUY' ? '#00ff88' : '#ff4444';
+        item.innerHTML = `
+            <div style="display: flex; justify-content: space-between;">
+                <span style="color: ${color}; font-weight: bold;">${trade.type}</span>
+                <span>${trade.quantity.toFixed(8)} ${trade.symbol}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--text-dim);">
+                <span>${trade.date}</span>
+                <span>$${trade.amount.toFixed(2)}</span>
+            </div>
+        `;
+        historyList.appendChild(item);
+    });
 }
 
 // ============================================
 // TERMINAL FUNCTIONALITY
 // ============================================
 
-/**
- * Select a cryptocurrency and update chart in real-time
- * @param {HTMLElement} element - The clicked coin item
- * @param {string} symbol - Cryptocurrency symbol (SHIB, DOGE, etc.)
- * @param {string} coinName - Full coin name (SHIBA INU, DOGECOIN, etc.)
- */
 function selectCoin(element, symbol, coinName) {
-    // Remove active class from all coins
     document.querySelectorAll('.coin-item').forEach(el => el.classList.remove('active'));
-    
-    // Add active class to selected coin
     element.classList.add('active');
     
-    // Get coin data or create it if new
     let coinData = coinDataMap[symbol];
     if (!coinData) {
-        // Create new coin data if it doesn't exist (for dynamically added pumps)
         coinData = {
             name: coinName,
             symbol: symbol.toUpperCase() + 'USDT',
@@ -183,24 +369,19 @@ function selectCoin(element, symbol, coinName) {
         coinDataMap[symbol] = coinData;
     }
     
-    // Update chart header with dynamic coin name
     const chartHeader = document.getElementById('chartHeader');
     chartHeader.textContent = `📈 ${coinName} (${coinData.pair}/USDT) - LIVE CHART`;
     
-    // Update chart iframe with new coin data - FORCE REFRESH
     const chartContainer = document.querySelector('.chart-container');
     const chartIframe = document.querySelector('.chart-iframe');
     
-    // Create new iframe to force reload
     const newIframe = document.createElement('iframe');
     newIframe.className = 'chart-iframe';
     newIframe.src = `https://s.tradingview.com/widgetembed/?symbol=BINANCE%3A${coinData.symbol}&interval=1&theme=dark&style=1`;
     newIframe.frameBorder = '0';
     
-    // Replace old iframe with new one
     chartIframe.parentNode.replaceChild(newIframe, chartIframe);
     
-    // Add fade-in animation
     newIframe.style.opacity = '0';
     newIframe.style.transition = 'opacity 0.3s ease-in';
     setTimeout(() => {
@@ -214,10 +395,6 @@ function selectCoin(element, symbol, coinName) {
 
 let pumpDetectionInterval = null;
 
-/**
- * Simulate pump detection and add new coins
- * In production, this would connect to a real API/WebSocket
- */
 function startPumpDetection() {
     if (!isAuthenticated) return;
     
@@ -234,12 +411,9 @@ function startPumpDetection() {
         
         const randomPump = newPumps[Math.floor(Math.random() * newPumps.length)];
         addNewPumpCoin(randomPump.symbol, randomPump.name, randomPump.price, randomPump.change);
-    }, 12000); // Every 12 seconds
+    }, 12000);
 }
 
-/**
- * Stop pump detection when logging out
- */
 function stopPumpDetection() {
     if (pumpDetectionInterval) {
         clearInterval(pumpDetectionInterval);
@@ -247,61 +421,42 @@ function stopPumpDetection() {
     }
 }
 
-/**
- * Add new coin from pump detection
- * @param {string} symbol - Coin symbol
- * @param {string} name - Full coin name
- * @param {string} price - Current price
- * @param {string} change - Price change percentage
- */
 function addNewPumpCoin(symbol, name, price, change) {
     const newCoinsSection = document.getElementById('newCoinsSection');
     const newCoinsList = document.getElementById('newCoinsList');
     
-    // Show new pumps section
     newCoinsSection.style.display = 'block';
     
-    // Check if coin already exists
     const existingCoins = newCoinsList.querySelectorAll('.coin-item');
     for (let coin of existingCoins) {
         if (coin.textContent.includes(name)) {
-            return; // Coin already exists
+            return;
         }
     }
     
-    // Create new coin element
     const coinElement = document.createElement('div');
     coinElement.className = 'coin-item new-pump';
+    const basePrice = parseFloat(price.replace('$', ''));
     coinElement.innerHTML = `
         <div class="coin-name">${name}</div>
-        <div class="coin-price">${price}</div>
+        <div class="coin-price" data-price="${basePrice}">${price}</div>
         <div class="coin-change positive">${change}</div>
     `;
     
-    // Add click handler with real-time chart loading
     coinElement.onclick = () => {
+        openTradeModal(coinElement, symbol, name, basePrice);
         selectCoin(coinElement, symbol, name);
     };
     
-    // Add to list
     newCoinsList.insertBefore(coinElement, newCoinsList.firstChild);
-    
-    // Show notification
     showPumpNotification(symbol, name, change);
     
-    // Remove old coins if list gets too long
     const coins = newCoinsList.querySelectorAll('.coin-item');
     if (coins.length > 5) {
         coins[coins.length - 1].remove();
     }
 }
 
-/**
- * Show pump notification popup
- * @param {string} symbol - Coin symbol
- * @param {string} name - Coin name
- * @param {string} change - Price change
- */
 function showPumpNotification(symbol, name, change) {
     const notification = document.getElementById('pumpNotification');
     const title = document.getElementById('pumpTitle');
@@ -312,7 +467,6 @@ function showPumpNotification(symbol, name, change) {
     
     notification.classList.add('show');
     
-    // Auto-hide after 5 seconds
     setTimeout(() => {
         notification.classList.remove('show');
     }, 5000);
@@ -322,17 +476,11 @@ function showPumpNotification(symbol, name, change) {
 // CURSOR SYSTEM
 // ============================================
 
-/**
- * Track mouse movement and update custom cursor position
- */
 document.addEventListener('mousemove', (e) => {
     cursor.style.left = e.clientX + 'px';
     cursor.style.top = e.clientY + 'px';
 });
 
-/**
- * Toggle between custom cursor and system cursor
- */
 function toggleCursorMode() {
     isCustom = !isCustom;
     
@@ -347,22 +495,14 @@ function toggleCursorMode() {
     }
 }
 
-/**
- * Switch between different cursor styles
- * Cycles through: Dot → Scanner → Ghost → Dot
- */
 function nextCursor() {
     if (!isCustom) return;
     
-    // Remove previous cursor class
     cursor.classList.remove(cursorTypes[currentIndex].class);
     
-    // Move to next cursor type
     currentIndex = (currentIndex + 1) % cursorTypes.length;
     
-    // Add new cursor class
     cursor.classList.add(cursorTypes[currentIndex].class);
     
-    // Update button text
     styleBtn.innerText = "Style: " + cursorTypes[currentIndex].name;
 }
